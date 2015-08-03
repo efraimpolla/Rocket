@@ -116,6 +116,7 @@ include_directories(
 set(GAME_SRC
   Classes/AppDelegate.cpp
   Classes/MainLayer.cpp
+  Classes/GameLayer.cpp
   ${PLATFORM_SPECIFIC_SRC}
 )
 
@@ -123,6 +124,7 @@ set(GAME_HEADERS
   Classes/AppDelegate.h
   Classes/GameConfig.h
   Classes/MainLayer.h
+  Classes/GameLayer.h
   
   ${PLATFORM_SPECIFIC_HEADERS}
 )

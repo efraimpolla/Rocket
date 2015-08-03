@@ -1,6 +1,7 @@
 #include "AppDelegate.h"
 #include "MainLayer.h"
 #include "GameConfig.h"
+#include "GameLayer.h"
 USING_NS_CC;
 
 AppDelegate::AppDelegate() {
@@ -42,7 +43,8 @@ bool AppDelegate::applicationDidFinishLaunching() {
 
 	// add folder search paths to find the game's resources
 	std::vector<std::string> searchPath;
-	searchPath.push_back("Images");
+	//android nao carrega em pastas
+	//searchPath.push_back("Images");
 	searchPath.push_back("Fonts");
 
 	// set search paths
@@ -57,7 +59,7 @@ bool AppDelegate::applicationDidFinishLaunching() {
 	register_all_packages();
 
 	// create a scene. it's an autorelease object
-	auto scene = MainLayer::scene();
+	auto scene = GameLayer::scene();
 
 	// run
 	director->runWithScene(scene);
