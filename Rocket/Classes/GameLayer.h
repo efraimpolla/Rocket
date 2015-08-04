@@ -27,8 +27,25 @@ public:
 
 private:
 	cocos2d::Point rm_position;
+
 	Sprite *rocketMan;
 	Animate *jetpackAnimation;
+
+	int currentPlatformTag;
+	int platformCount;
+	float currentPlatformY;
+	float currentMaxPlatformStep;
+	int currentBonusType;
+	int currentBonusPlatformIndex;
+	
+	bool gameSuspended;
+
+	void _initPlatform();
+	void _initPlatforms();
+	void _resetPlatform();
+	void _resetPlatforms();
+
+	
 	void _startGame();
 	void _resetRocketMan();
 
