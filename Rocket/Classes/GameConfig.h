@@ -17,6 +17,11 @@
 #define SCREEN_HEIGHT 480
 #define DISPLAY_STATS true
 
+#define K_PLAY_BACKGROUND_MUSIC 1
+#define K_PLAY_BACKGROUND_MUSIC_VOLUME 0.2f
+#define K_PLAY_SOUND_EFFECTS 1
+
+
 #define RANDOM_SEED() srand(time(0))
 
 enum {

@@ -2,6 +2,7 @@
 #include "MainLayer.h"
 #include "GameConfig.h"
 #include "GameLayer.h"
+#include "SimpleAudioEngine.h"
 USING_NS_CC;
 
 AppDelegate::AppDelegate() {
@@ -43,8 +44,7 @@ bool AppDelegate::applicationDidFinishLaunching() {
 
 	// add folder search paths to find the game's resources
 	std::vector<std::string> searchPath;
-	//android nao carrega em pastas
-	//searchPath.push_back("Images");
+	searchPath.push_back("Images");
 	searchPath.push_back("Fonts");
 
 	// set search paths

@@ -8,6 +8,7 @@
 //
 
 #include "GameLayer.h"
+#include "SimpleAudioEngine.h"
 
 using namespace cocos2d;
 
@@ -29,6 +30,16 @@ GameLayer::GameLayer()
 	this->addChild(rocketMan, 4, kRocketMan);
 
 	_startGame();
+
+
+#if K_PLAY_BACKGROUND_MUSIC
+	// play and loop background music during the game
+	auto soundEngine = CocosDenshion::SimpleAudioEngine::sharedEngine();
+	soundEngine->playBackgroundMusic("background.wav");
+	soundEngine->setBackgroundMusicVolume(K_PLAY_BACKGROUND_MUSIC_VOLUME);
+
+#endif
+
 }
 
 void GameLayer::_initJetPackAnimation()
@@ -53,6 +64,8 @@ void GameLayer::_initJetPackAnimation()
 
 GameLayer::~GameLayer()
 {
+	CocosDenshion::SimpleAudioEngine::sharedEngine()->stopBackgroundMusic();
+	CocosDenshion::SimpleAudioEngine::sharedEngine()->stopAllEffects();
 }
 
 
