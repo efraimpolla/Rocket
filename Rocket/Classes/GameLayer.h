@@ -28,7 +28,7 @@ public:
 private:
 	Point rm_position;
 	Vec2 rm_velocity;
-	Vec2 rm_aceleration;
+	Vec2 rm_acceleration;
 
 	Sprite *rocketMan;
 	Animate *jetpackAnimation;

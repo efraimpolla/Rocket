@@ -64,9 +64,8 @@ void GameLayer::onAcceleration(Acceleration* pAccelerationValue, Event* event)
 
 	//acceleration left and right 
 	float accel_filter = 0.1f;
-	//rm_velocity.x = rm_velocity.x * accel_filter + pAccelerationValue->x * (1.0f - accel_filter) * 500.0f;
-	//if axes is inverted
-	rm_velocity.x = rm_velocity.x * accel_filter + -1*pAccelerationValue->y * (1.0f - accel_filter) * 500.0f;
+	//if axes is inverted Bug in cocos 
+	rm_velocity.x = rm_velocity.x * accel_filter + -1 * pAccelerationValue->y * (1.0f - accel_filter) * 500.0f;
 }
 
 void GameLayer::_initJetPackAnimation()
@@ -117,7 +116,7 @@ void GameLayer::_resetRocketMan()
 	rm_velocity.x = 0;
 	rm_velocity.y = 0;
 
-	rm_aceleration.x = 0;
+	rm_acceleration.x = 0;
 
 	rm_lookingRight = true;
 	rocketMan->setScaleX(1.0f);
@@ -125,13 +124,52 @@ void GameLayer::_resetRocketMan()
 
 void GameLayer::update(float dt)
 {
-	if (rm_position.x <= 0)
-		rm_position.x = 0;
-	if (rm_position.y >= 320)
-		rm_position.y = 320;
-
+	if (gameSuspended)
+		return;
 	//draw at its new position 
 	rm_position.x += rm_velocity.x * dt;
+
+	// rm_lookingRight/Left is used to flip RocketMan in the right direction i.e. direction of the velocity
+	// so RocketMan does not travel backwards
+	if (rm_velocity.x < -30.0f && rm_lookingRight)
+	{
+		rm_lookingRight = false;
+		rocketMan->setScaleX(-1.0f);
+	}
+	else if (rm_velocity.x > 30.0f && !rm_lookingRight)
+	{
+		rm_lookingRight = true;
+		rocketMan->setScaleX(1.0f);
+	}
+
+	Size rm_size = rocketMan->getContentSize();
+	float max_x = SCREEN_WIDTH + rm_size.width * 0.5f;
+	float min_x = -rm_size.width * 0.5;
+
+	if (rm_position.x > max_x)
+		rm_position.x = min_x;
+	if (rm_position.x < min_x)
+		rm_position.x = max_x;
+
+	rm_velocity.y += rm_acceleration.y * dt;
+	rm_velocity.y += rm_velocity.y * dt;
+
+	if (rm_position.y > SCREEN_HEIGHT * 0.5f)
+	{
+		// If the rocketman is going past half the screen, we move the platforms down
+		// and add new platforms at the top to make it feel like the rocketman is moving up
+		// Obviously, the platforms cannot go down, can they :)
+		float delta = rm_position.y - SCREEN_HEIGHT * 0.5f;
+		rm_position.y = SCREEN_HEIGHT * 0.5f;
+	}
+
+	//temporarily make the rocketMan go to the top
+	if (rm_position.y < 0)
+	{
+		rm_position.y = SCREEN_HEIGHT;
+		rm_velocity.y = 0;
+	}
+
 	rocketMan->setPosition(rm_position);
 }
 
