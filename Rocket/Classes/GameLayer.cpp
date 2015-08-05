@@ -35,7 +35,17 @@ GameLayer::GameLayer()
 	this->addChild(rocketMan, 4, kRocketMan);
 
 	_startGame();
+	//run the game loop
+	scheduleUpdate();
 
+	//disable the touch 
+	setTouchEnabled(false);
+
+	//enable accelerometer
+	Device::setAccelerometerEnabled(true);
+
+	auto listener = EventListenerAcceleration::create(CC_CALLBACK_2(GameLayer::onAcceleration, this));
+	_eventDispatcher->addEventListenerWithSceneGraphPriority(listener, this);
 
 #if K_PLAY_BACKGROUND_MUSIC
 	// play and loop background music during the game
@@ -45,6 +55,18 @@ GameLayer::GameLayer()
 
 #endif
 
+}
+
+void GameLayer::onAcceleration(Acceleration* pAccelerationValue, Event* event)
+{
+	if (gameSuspended)
+		return;
+
+	//acceleration left and right 
+	float accel_filter = 0.1f;
+	//rm_velocity.x = rm_velocity.x * accel_filter + pAccelerationValue->x * (1.0f - accel_filter) * 500.0f;
+	//if axes is inverted
+	rm_velocity.x = rm_velocity.x * accel_filter + -1*pAccelerationValue->y * (1.0f - accel_filter) * 500.0f;
 }
 
 void GameLayer::_initJetPackAnimation()
@@ -91,10 +113,27 @@ void GameLayer::_resetRocketMan()
 	rm_position.x = SCREEN_WIDTH * 0.5f;
 	rm_position.y = SCREEN_HEIGHT * 0.5f;
 	rocketMan->setPosition(rm_position);
+
+	rm_velocity.x = 0;
+	rm_velocity.y = 0;
+
+	rm_aceleration.x = 0;
+
+	rm_lookingRight = true;
+	rocketMan->setScaleX(1.0f);
 }
 
 void GameLayer::update(float dt)
-{}
+{
+	if (rm_position.x <= 0)
+		rm_position.x = 0;
+	if (rm_position.y >= 320)
+		rm_position.y = 320;
+
+	//draw at its new position 
+	rm_position.x += rm_velocity.x * dt;
+	rocketMan->setPosition(rm_position);
+}
 
 void GameLayer::_initPlatform()
 {

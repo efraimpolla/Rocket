@@ -39,17 +39,23 @@ bool AppDelegate::applicationDidFinishLaunching() {
 		glview = GLViewImpl::create("My Game");
 		director->setOpenGLView(glview);
 	}
-
 	glview->setDesignResolutionSize(320, 480, ResolutionPolicy::EXACT_FIT);
 
-	// add folder search paths to find the game's resources
-	std::vector<std::string> searchPath;
-	searchPath.push_back("Images");
-	searchPath.push_back("Fonts");
+	//Some devices cant open folders
+	try {
+		// add folder search paths to find the game's resources
+		std::vector<std::string> searchPath;
+		searchPath.push_back("Images");
+		searchPath.push_back("Fonts");
 
-	// set search paths
-	FileUtils::sharedFileUtils()->setSearchPaths(searchPath);
-
+		// set search paths
+		FileUtils::sharedFileUtils()->setSearchPaths(searchPath);
+	}
+	catch (exception e )
+	{ 
+		MessageBox("status: Loading folders", "Error");
+		exit(0);
+	}
 	// turn on display FPS
 	director->setDisplayStats(true);
 
