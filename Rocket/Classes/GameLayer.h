@@ -42,6 +42,7 @@ private:
 	
 	bool rm_lookingRight;
 	bool gameSuspended;
+	int score = 0;
 
 	void _initPlatform();
 	void _initPlatforms();

@@ -34,6 +34,11 @@ GameLayer::GameLayer()
 	rocketMan->runAction(jetpackAnimation);
 	this->addChild(rocketMan, 4, kRocketMan);
 
+	//This is to create the score
+	LabelBMFont* scoreLabel = LabelBMFont::create("0", "bitmapFont.fnt");
+	addChild(scoreLabel, 5, kScoreLabel);
+	scoreLabel->setPosition(Point(160, 430));
+
 	_startGame();
 	//run the game loop
 	scheduleUpdate();
@@ -103,6 +108,7 @@ GameLayer::~GameLayer()
 
 void GameLayer::_startGame()
 {
+	score = 0;
 	_resetPlatforms();
 	_resetRocketMan();
 }
@@ -126,9 +132,11 @@ void GameLayer::update(float dt)
 {
 	if (gameSuspended)
 		return;
-	//draw at its new position 
-	rm_position.x += rm_velocity.x * dt;
 
+
+	
+	rm_position.x += rm_velocity.x * dt;
+		
 	// rm_lookingRight/Left is used to flip RocketMan in the right direction i.e. direction of the velocity
 	// so RocketMan does not travel backwards
 	if (rm_velocity.x < -30.0f && rm_lookingRight)
@@ -179,7 +187,6 @@ void GameLayer::update(float dt)
 			if (rm_position.y < -rm_size.height){
 				//todo exit game
 			}
-
 		}
 	}
 	else if (rm_position.y > SCREEN_HEIGHT * 0.5f)
@@ -210,8 +217,12 @@ void GameLayer::update(float dt)
 				platform->setPosition(position);
 			}
 		}
+		score += (int)delta;
+		__String* scoreStr = __String::createWithFormat("%d", score);
+		LabelBMFont* scoreLabel = dynamic_cast<LabelBMFont*>(getChildByTag(kScoreLabel));
+		scoreLabel->setString(scoreStr->getCString());
 	}
-
+	//// draw RocketMan at its new position
 	rocketMan->setPosition(rm_position);
 }
 void GameLayer::_jump()
