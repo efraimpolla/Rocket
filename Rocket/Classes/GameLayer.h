@@ -32,7 +32,11 @@ private:
 
 	Sprite *rocketMan;
 	Sprite* pHealthSprite;
-
+	Sprite * bonus5;
+	Sprite * bonus10;
+	Sprite * bonus50;
+	Sprite * bonus100;
+	
 	ProgressTimer* pHealthBar;
 
 	Animate *jetpackAnimation;
@@ -58,7 +62,8 @@ private:
 	void _resetRocketMan();
 	void _jump();
 	void _initJetPackAnimation();
-
+	void _superJump();
+	void _resetBonus();
 	void onAcceleration(Acceleration *acc, Event* event);
 };
 

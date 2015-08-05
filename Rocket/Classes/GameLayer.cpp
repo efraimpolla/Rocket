@@ -50,8 +50,22 @@ GameLayer::GameLayer()
 	this->reorderChild(pHealthBar, 100);
 	this->addChild(pHealthBar);
 
-	
+	// the bonus sprites which say 5, 10 etc can be picked from here
+	bonus5 = Sprite::createWithSpriteFrameName("score_5.png");
+	this->addChild(bonus5, 4, kBonusStartTag);
+	bonus5->setVisible(false);
 
+	bonus10 = Sprite::createWithSpriteFrameName("score_10.png");
+	this->addChild(bonus10, 4, kBonusStartTag + 1);
+	bonus10->setVisible(false);
+
+	bonus50 = Sprite::createWithSpriteFrameName("score_50.png");
+	this->addChild(bonus50, 4, kBonusStartTag + 2);
+	bonus50->setVisible(false);
+
+	bonus100 = Sprite::createWithSpriteFrameName("score_100.png");
+	this->addChild(bonus100, 4, kBonusStartTag + 3);
+	bonus100->setVisible(false);
 	//This is to create the score
 	LabelBMFont* scoreLabel = LabelBMFont::create("0", "bitmapFont.fnt");
 	addChild(scoreLabel, 5, kScoreLabel);
@@ -129,6 +143,8 @@ void GameLayer::_startGame()
 	score = 0;
 	_resetPlatforms();
 	_resetRocketMan();
+	_resetBonus();
+
 }
 
 void GameLayer::_resetRocketMan()
@@ -190,6 +206,58 @@ void GameLayer::update(float dt)
 		if (pHealthBar->getPercentage() <= 0)
 		{
 			//todo show high scores
+		}
+	}
+
+	Sprite* bonus;
+	switch (currentBonusType)
+	{
+	case 0: 
+		bonus = bonus5;
+		break;
+	case 1:
+		bonus = bonus10;
+		break;
+	case 2:
+		bonus = bonus50;
+		break;
+	case 3:
+		bonus = bonus100;
+		break;
+	
+	default:
+		break;
+	}
+	// check if the bonus node is visible
+	if (bonus->isVisible())
+	{
+		// check if RocketMan and the bonus are colliding, if so, give RocketMan the bonus
+		Point bonus_position = bonus->getPosition();
+		float range = 20.0f;
+		if (rm_position.x > bonus_position.x - range &&
+			+rm_position.x < bonus_position.x + range &&
+			+rm_position.y > bonus_position.y - range &&
+			+rm_position.y < bonus_position.y + range)
+		{
+			// TODO: Our bonuses should be more rocket fuel or additional lives
+			switch (currentBonusType)
+			{
+			case kBonus5: 
+				score += 5000;
+				break;
+			case kBonus10:
+				score += 10000;
+				break;
+			case kBonus50:
+				score += 50000;
+				break;
+			case kBonus100:
+				score += 100000;
+				break;
+			default:
+				break;
+			}
+
 		}
 	}
 
