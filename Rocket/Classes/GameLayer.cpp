@@ -110,7 +110,7 @@ void GameLayer::_startGame()
 void GameLayer::_resetRocketMan()
 {
 	rm_position.x = SCREEN_WIDTH * 0.5f;
-	rm_position.y = SCREEN_HEIGHT * 0.5f;
+	rm_position.y = SCREEN_WIDTH * 0.5f;
 	rocketMan->setPosition(rm_position);
 
 	rm_velocity.x = 0;
@@ -163,15 +163,41 @@ void GameLayer::update(float dt)
 		rm_position.y = SCREEN_HEIGHT * 0.5f;
 	}
 
+	int platformTag;
 	//temporarily make the rocketMan go to the top
 	if (rm_position.y < 0)
 	{
 		rm_position.y = SCREEN_HEIGHT;
 		rm_velocity.y = 0;
+		for (platformTag = kPlatformsStartTag; platformTag < K_NUM_PLATFORMS; platformTag++)
+		{
+			Sprite * platform = dynamic_cast<Sprite*>(this->getChildByTag(platformTag));
+			Size platform_size = platform->getContentSize();
+			Point platform_position = platform->getPosition();
+			max_x = platform_position.x = platform_size.width * 0.5f - 10;
+			min_x = platform_position.x = platform_size.width * 0.5f + 10;
+			float min_y = platform_position.x + (platform_size.height + rm_size.height) * 0.5f - K_PLATFORM_TOP_PADDING;
+
+			//check if rocketMan and the platform is colling, if so, make the rocketMan jump
+			if (rm_position.x > max_x && rm_position.x < min_x && rm_position.y > platform_position.y && rm_position.y < min_y)
+			{
+				_jump();
+			}
+
+		}
 	}
 
 	rocketMan->setPosition(rm_position);
 }
+void GameLayer::_jump()
+{
+#ifdef K_PLAY_SOUND_EFFECTS
+	CocosDenshion::SimpleAudioEngine::sharedEngine()->playEffect("jump.way");
+#endif 
+
+	rm_velocity.y = 350.0f + fabsf(rm_velocity.x);
+}
+
 
 void GameLayer::_initPlatform()
 {

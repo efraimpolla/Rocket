@@ -51,7 +51,7 @@ private:
 	
 	void _startGame();
 	void _resetRocketMan();
-
+	void _jump();
 	void _initJetPackAnimation();
 
 	void onAcceleration(Acceleration *acc, Event* event);
