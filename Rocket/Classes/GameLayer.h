@@ -31,25 +31,29 @@ private:
 	Vec2 rm_acceleration;
 
 	Sprite *rocketMan;
-	Animate *jetpackAnimation;
+	Sprite* pHealthSprite;
 
-	int currentPlatformTag;
-	int platformCount;
+	ProgressTimer* pHealthBar;
+
+	Animate *jetpackAnimation;
+	
 	float currentPlatformY;
 	float currentMaxPlatformStep;
+	
+	int currentPlatformTag;
+	int platformCount;
 	int currentBonusType;
 	int currentBonusPlatformIndex;
-	
+	int score = 0;
+	int fuelInTank;
+
 	bool rm_lookingRight;
 	bool gameSuspended;
-	int score = 0;
-
+		
 	void _initPlatform();
 	void _initPlatforms();
 	void _resetPlatform();
 	void _resetPlatforms();
-
-	
 	void _startGame();
 	void _resetRocketMan();
 	void _jump();
