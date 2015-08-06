@@ -117,6 +117,7 @@ set(GAME_SRC
   Classes/AppDelegate.cpp
   Classes/MainLayer.cpp
   Classes/GameLayer.cpp
+  Classes/HighScoreLayer.cpp
   ${PLATFORM_SPECIFIC_SRC}
 )
 
@@ -125,6 +126,7 @@ set(GAME_HEADERS
   Classes/GameConfig.h
   Classes/MainLayer.h
   Classes/GameLayer.h
+  Classes/HighScoreLayer.h
   
   ${PLATFORM_SPECIFIC_HEADERS}
 )
