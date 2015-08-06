@@ -101,8 +101,9 @@ void GameLayer::onAcceleration(Acceleration* pAccelerationValue, Event* event)
 
 	//acceleration left and right 
 	float accel_filter = 0.1f;
-	//if axes is inverted Bug in cocos 
-	rm_velocity.x = rm_velocity.x * accel_filter + -1 * pAccelerationValue->y * (1.0f - accel_filter) * 500.0f;
+	// bug in Cocos2d-x, on this device it is inverting the axes and directions
+	rm_velocity.x = rm_velocity.x * accel_filter + pAccelerationValue->x * (1.0f - accel_filter) * 500.0f;
+	//rm_velocity.x = rm_velocity.x * accel_filter + -1 * pAccelerationValue->y * (1.0f - accel_filter) * 500.0f;
 }
 
 void GameLayer::_initJetPackAnimation()
@@ -258,11 +259,27 @@ void GameLayer::update(float dt)
 				break;
 			}
 
+			__String* scoreString = __String::createWithFormat("%d", score);
+			LabelBMFont* scoreLabel = dynamic_cast<LabelBMFont*>(getChildByTag(kScoreLabel));
+			scoreLabel->setString(scoreString->getCString());
+
+			ScaleTo * action1 = ScaleTo::create(0.2f, 1.5f, 0.8f);
+			ScaleTo* action2 = ScaleTo::create(0.2f, 1.0f, 1.0f);
+			// What are ScaleTo and Sequence.. what do these actions do?
+			// Likely, this just makes RocketMan move up very fast without it having to collide with anything
+
+			Sequence * action3 = Sequence::create(action1,action2,action1, action2, action1, action2, NULL);
+			scoreLabel->runAction(action3);
+
+			//what does reset buttons do?
+			_resetBonus();
+			_superJump();
 		}
 	}
 
 	int platformTag;
-	//temporarily make the rocketMan go to the top
+	// Add the collision logic between the rocketman and the struss/asteroid. The rocketman collides only 
+	// when he is falling down.
 	if (rm_position.y < 0)
 	{
 		rm_position.y = SCREEN_HEIGHT;
@@ -332,6 +349,25 @@ void GameLayer::_jump()
 	rm_velocity.y = 350.0f + fabsf(rm_velocity.x);
 }
 
+void GameLayer::_resetBonus(){
+	Sprite* bnus = dynamic_cast<Sprite*>(this->getChildByTag(kBonusStartTag + currentBonusType));
+	bonus5->setVisible(false);
+
+	currentBonusPlatformIndex += CCRANDOM_0_1() * (K_MAX_BONUS_STEP - K_MIN_BONUS_STEP) + K_MIN_BONUS_STEP;
+	if (score < 10000)
+		currentBonusType = 0;
+	else if (score < 50000 )
+		currentBonusType = CCRANDOM_0_1() * 2;
+	else if (score < 100000)
+		currentBonusType = CCRANDOM_0_1() * 3;
+	else 
+		currentBonusType = CCRANDOM_0_1() * 2 + 2;
+}
+
+void GameLayer::_superJump()
+{
+	rm_velocity.y = 1000.0f + fabsf(rm_velocity.x);
+}
 
 void GameLayer::_initPlatform()
 {
