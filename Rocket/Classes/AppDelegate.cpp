@@ -1,5 +1,11 @@
+//  Sanjeev Dwivedi: Updated to v3.6-Windows 10 Universal on 5/10/15
+
 #include "AppDelegate.h"
-#include "HelloWorldScene.h"
+#include "MainLayer.h"
+#include "GameConfig.h"
+#include "GameLayer.h"
+#include "SimpleAudioEngine.h"
+#include "HighScoreLayer.h"
 
 USING_NS_CC;
 
@@ -38,6 +44,16 @@ bool AppDelegate::applicationDidFinishLaunching() {
         director->setOpenGLView(glview);
     }
 
+	glview->setDesignResolutionSize(320, 480, ResolutionPolicy::EXACT_FIT);
+
+	// add folder search paths to find the game's resources
+	std::vector<std::string> searchPath;
+	searchPath.push_back("Images");
+	searchPath.push_back("Fonts");
+
+	// set search paths
+	FileUtils::sharedFileUtils()->setSearchPaths(searchPath);
+
     // turn on display FPS
     director->setDisplayStats(true);
 
@@ -47,7 +63,8 @@ bool AppDelegate::applicationDidFinishLaunching() {
     register_all_packages();
 
     // create a scene. it's an autorelease object
-    auto scene = HelloWorld::createScene();
+    //auto scene = HighScoreLayer::scene(0);
+	auto scene = GameLayer::scene();
 
     // run
     director->runWithScene(scene);

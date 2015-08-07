@@ -1,0 +1,12 @@
+*.obj
+*.tlog
+*.class
+*.pdb
+*.log
+*.so
+*.a
+*.d
+*.o
+*.lib
+*.opensdf
+*.user
